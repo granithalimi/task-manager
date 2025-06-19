@@ -1,0 +1,36 @@
+import "./App.css";
+
+function App() {
+  return (
+    <div className="w-full h-screen bg-[#1E1E2F]">
+      <header className="w-full h-20 flex items-center justify-center">
+        <h1 className="text-3xl text-center montserrat-title text-[#FFFFFF]">
+          Task Manager
+        </h1>
+      </header>
+      {/* Search */}
+      <div className="w-full h-24 flex justify-center gap-3 items-center">
+        <input
+          placeholder="Add Tasks"
+          className="md:w-10/12 md:h-2/3 h-12 ps-3 rounded-xl md:ps-10 text-xl text-white bg-white/10"
+        />
+        <button className="md:text-xl text-[#FFFFFF] px-3 py-1 bg-[#FF6B6B] rounded-lg montserrat-title hover:bg-[#FFD93D] hover:text-black duration-300">
+          Add
+        </button>
+      </div>
+
+      {/* Tasks */}
+      <div className="w-full flex flex-col justify-center gap-3 items-center my-10">
+        <div className="w-11/12 h-20 bg-[#FF6B6B] rounded-xl flex">
+          <div className="w-7/12 h-full flex items-center">
+            <h1 className="text-center">Todo</h1>
+          </div>
+          <div className="w-5/12 h-full"></div>
+
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default App;
