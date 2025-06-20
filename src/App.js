@@ -80,7 +80,7 @@ function App() {
   };
 
   const handleTwentie = (e) => {
-    setTime(3);
+    setTime(1200);
   };
   const handleFifty = (e) => {
     setTime(3000);
