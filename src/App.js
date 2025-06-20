@@ -34,6 +34,7 @@ function App() {
       return res;
     });
   };
+
   const handleFinishedClose = (_, f_id) => {
     setFinished((p) => {
       let res = p.filter((t) => t.id !== f_id);
@@ -66,6 +67,7 @@ function App() {
       return res;
     });
   };
+
   const handleDown = (_, ind) => {
     if (ind === tasks.length - 1) return;
     setTasks((p) => {
@@ -78,29 +80,35 @@ function App() {
   };
 
   const handleTwentie = (e) => {
-    setTime(1200);
+    setTime(3);
   };
   const handleFifty = (e) => {
     setTime(3000);
   };
 
   useEffect(() => {
-    if (started === true && time > 0) {
-      var inter = setInterval(() => {
-          setTime((p) => p - 1);
+    if (started && time > 0) {
+      var intervalId = setInterval(() => {
+        setTime((p) => p - 1);
       }, 1000);
-    } else if (started === true && time === 0) {
-      const audio = new Audio("sounds/alarm.mp3");
+    }else if(started && time === 0){
+      const audio = new Audio("/sounds/alarm.mp3");
       audio.play();
+      setStarted((p) => false);
+      return;
     }
 
     return () => {
-      clearInterval(inter);
+        clearInterval(intervalId);
     };
-  }, [started]);
+  }, [started, time]);
 
-  const stopClicked = (e) => {
-    setStarted((p) => false);
+  const startClicked = (e) => {
+    if (!started && time <= 0) {
+      setStarted((p) => false);
+      return;
+    }
+    setStarted((p) => true);
   };
 
   return (
@@ -140,25 +148,19 @@ function App() {
           <div className="flex gap-3 justify-center items-center">
             {started ? (
               <button
-                onClick={(e) => stopClicked((p) => false)}
+                onClick={(e) => setStarted((p) => false)}
                 className="text-white font-extrabold px-3 py-1 rounded-lg bg-red-400"
               >
                 Stop
               </button>
             ) : (
               <button
-                onClick={(e) => setStarted((p) => true)}
+                onClick={(e) => startClicked(e)}
                 className="text-white font-extrabold px-3 py-1 rounded-lg bg-green-400"
               >
                 Start
               </button>
             )}
-            <button
-              onClick={(e) => setTime((p) => 0)}
-              className="text-white font-extrabold px-3 py-1 rounded-lg bg-blue-400"
-            >
-              Reset
-            </button>
           </div>
         </div>
       </div>
