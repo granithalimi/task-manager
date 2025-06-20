@@ -3,16 +3,18 @@ import { FaArrowAltCircleDown } from "react-icons/fa";
 import { FaCheckCircle } from "react-icons/fa";
 import { FaArrowAltCircleUp } from "react-icons/fa";
 import { IoCloseCircle } from "react-icons/io5";
-import { useRef, useState} from "react";
+import { useEffect, useRef, useState } from "react";
 
 function App() {
   const [tasks, setTasks] = useState({});
   const [finished, setFinished] = useState({});
+  const [time, setTime] = useState(0);
+  const [started, setStarted] = useState(false);
   const inputRef = useRef(null);
 
-  const handleKeyDown = e => {
-    if(e.key === "Enter") handleClick(e);
-  }
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") handleClick(e);
+  };
 
   const handleClick = () => {
     const task = inputRef.current.value.trim();
@@ -74,10 +76,32 @@ function App() {
       return res;
     });
   };
-  // const handlePlay = e => {
-  //   const audio = new Audio("sounds/alarm.mp3")
-  //   audio.play()
-  // }
+
+  const handleTwentie = (e) => {
+    setTime(1200);
+  };
+  const handleFifty = (e) => {
+    setTime(3000);
+  };
+
+  useEffect(() => {
+    if (started === true && time > 0) {
+      var inter = setInterval(() => {
+          setTime((p) => p - 1);
+      }, 1000);
+    } else if (started === true && time === 0) {
+      const audio = new Audio("sounds/alarm.mp3");
+      audio.play();
+    }
+
+    return () => {
+      clearInterval(inter);
+    };
+  }, [started]);
+
+  const stopClicked = (e) => {
+    setStarted((p) => false);
+  };
 
   return (
     <div className="w-full min-h-screen bg-[#1E1E2F] overflow-hidden">
@@ -87,12 +111,63 @@ function App() {
         </h1>
       </header>
       {/* Pomodoro session */}
+      <div className="w-full flex flex-col items-center gap-5 pb-10">
+        {/* buttons */}
+        <div className="flex gap-3">
+          <button
+            onClick={(e) => handleTwentie(e)}
+            className="px-4 py-1 rounded-lg text-white font-extrabold bg-[#FF6B6B] hover:bg-red-600 duration-300"
+          >
+            20:5
+          </button>
+          <button
+            onClick={(e) => handleFifty(e)}
+            className="px-4 py-1 rounded-lg text-white font-extrabold bg-[#FF6B6B] hover:bg-red-600 duration-300"
+          >
+            50:10
+          </button>
+        </div>
+        <div className="flex flex-col bg-white rounded-xl px-32 py-10">
+          <div>
+            <h1 className=" text-4xl font-extrabold">
+              00:
+              {time / 60 < 10
+                ? `0${Math.trunc(time / 60)}`
+                : Math.trunc(time / 60)}
+              :{time % 60 < 10 ? `0${time % 60}` : time % 60}
+            </h1>
+          </div>
+          <div className="flex gap-3 justify-center items-center">
+            {started ? (
+              <button
+                onClick={(e) => stopClicked((p) => false)}
+                className="text-white font-extrabold px-3 py-1 rounded-lg bg-red-400"
+              >
+                Stop
+              </button>
+            ) : (
+              <button
+                onClick={(e) => setStarted((p) => true)}
+                className="text-white font-extrabold px-3 py-1 rounded-lg bg-green-400"
+              >
+                Start
+              </button>
+            )}
+            <button
+              onClick={(e) => setTime((p) => 0)}
+              className="text-white font-extrabold px-3 py-1 rounded-lg bg-blue-400"
+            >
+              Reset
+            </button>
+          </div>
+        </div>
+      </div>
 
       {/* Search */}
       <div className="w-full h-24 flex justify-center gap-3 items-center">
         <input
           ref={inputRef}
-          onKeyDown={e => handleKeyDown(e)}
+          onKeyDown={(e) => handleKeyDown(e)}
           placeholder="Add Tasks"
           className="md:w-10/12 md:h-2/3 h-12 ps-3 rounded-lg md:ps-10 text-xl text-white bg-white/10"
         />
