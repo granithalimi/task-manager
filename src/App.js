@@ -3,12 +3,16 @@ import { FaArrowAltCircleDown } from "react-icons/fa";
 import { FaCheckCircle } from "react-icons/fa";
 import { FaArrowAltCircleUp } from "react-icons/fa";
 import { IoCloseCircle } from "react-icons/io5";
-import { useRef, useState } from "react";
+import { useRef, useState} from "react";
 
 function App() {
   const [tasks, setTasks] = useState({});
   const [finished, setFinished] = useState({});
   const inputRef = useRef(null);
+
+  const handleKeyDown = e => {
+    if(e.key === "Enter") handleClick(e);
+  }
 
   const handleClick = () => {
     const task = inputRef.current.value.trim();
@@ -19,6 +23,7 @@ function App() {
     else setTasks([{ id: 0, content: task }]);
 
     inputRef.current.value = "";
+    inputRef.current.focus();
   };
 
   const handleClose = (_, t_id) => {
@@ -69,6 +74,10 @@ function App() {
       return res;
     });
   };
+  // const handlePlay = e => {
+  //   const audio = new Audio("sounds/alarm.mp3")
+  //   audio.play()
+  // }
 
   return (
     <div className="w-full min-h-screen bg-[#1E1E2F] overflow-hidden">
@@ -83,6 +92,7 @@ function App() {
       <div className="w-full h-24 flex justify-center gap-3 items-center">
         <input
           ref={inputRef}
+          onKeyDown={e => handleKeyDown(e)}
           placeholder="Add Tasks"
           className="md:w-10/12 md:h-2/3 h-12 ps-3 rounded-lg md:ps-10 text-xl text-white bg-white/10"
         />
